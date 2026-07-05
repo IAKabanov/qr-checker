@@ -35,24 +35,29 @@ class MainFragment : Fragment() {
             // Dispose of the Composition when the view's LifecycleOwner is destroyed
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
-                QrreaderTheme {
-                    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                        Column(modifier = Modifier.padding(innerPadding)) {
-                            Greeting(
-                                name = "Android",
-                                modifier = Modifier.padding(16.dp)
-                            )
-                            WaterCounter()
-                            Button(
-                                onClick = {
-                                    findNavController().navigate(R.id.action_mainFragment_to_secondFragment)
-                                },
-                                modifier = Modifier.padding(16.dp)
-                            ) {
-                                Text("Go to Second Fragment")
-                            }
-                        }
-                    }
+                CreateUI(onClick = {
+                    findNavController().navigate(R.id.action_mainFragment_to_secondFragment)
+                })
+            }
+        }
+    }
+}
+
+@Composable
+fun CreateUI(onClick: () -> Unit = {}) {
+    QrreaderTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+            Column(modifier = Modifier.padding(innerPadding)) {
+                Greeting(
+                    name = "Android",
+                    modifier = Modifier.padding(16.dp)
+                )
+                WaterCounter()
+                Button(
+                    onClick = onClick,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Text("Go to Second Fragment")
                 }
             }
         }
@@ -88,8 +93,5 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    QrreaderTheme {
-        WaterCounter()
-        Greeting("Android")
-    }
+    CreateUI()
 }
