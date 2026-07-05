@@ -24,3 +24,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "qr-reader"
 include(":app")
+include(":domain")
+include(":data")
