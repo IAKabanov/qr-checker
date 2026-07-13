@@ -59,6 +59,13 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
+    // Camera
+    implementation(libs.bundles.camerax)
+
+    // ML Kit
+    implementation(libs.mlkit.barcode.scanning)
+
+
     implementation(project(":data"))
     implementation(project(":domain"))
 }
