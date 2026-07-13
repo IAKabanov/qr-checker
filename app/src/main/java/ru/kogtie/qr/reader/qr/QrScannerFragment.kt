@@ -15,14 +15,13 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -33,8 +32,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.ClipOp
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -110,11 +117,9 @@ fun QrScannerScreen(
         if (hasCameraPermission) {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth(0.7f)
+                    .fillMaxWidth()
                     .aspectRatio(1f)
                     .align(Alignment.Center)
-                    .clip(RoundedCornerShape(24.dp))
-                    .border(2.dp, Color.White, RoundedCornerShape(24.dp))
             ) {
                 QrCameraPreview(
                     onQrScanned = { value ->
@@ -122,6 +127,7 @@ fun QrScannerScreen(
                     }
                 )
             }
+            ScannerOverlay()
         } else {
             Box(
                 modifier = Modifier
@@ -146,6 +152,35 @@ fun QrScannerScreen(
                 color = Color.White
             )
         }
+    }
+}
+
+@Composable
+fun ScannerOverlay(modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.fillMaxSize()) {
+        val scannerSize = size.width * 0.7f
+        val left = (size.width - scannerSize) / 2
+        val top = (size.height - scannerSize) / 2
+        val rect = Rect(left, top, left + scannerSize, top + scannerSize)
+
+        // Draw the semi-transparent overlay with a "hole"
+        clipPath(
+            path = Path().apply {
+                addRoundRect(RoundRect(rect, CornerRadius(16.dp.toPx())))
+            },
+            clipOp = ClipOp.Difference
+        ) {
+            drawRect(Color.Black.copy(alpha = 0.5f))
+        }
+
+        // Draw the white frame
+        drawRoundRect(
+            color = Color.White,
+            topLeft = Offset(left, top),
+            size = Size(scannerSize, scannerSize),
+            cornerRadius = CornerRadius(16.dp.toPx()),
+            style = Stroke(width = 2.dp.toPx())
+        )
     }
 }
 
