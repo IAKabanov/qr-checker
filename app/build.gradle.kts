@@ -65,6 +65,13 @@ dependencies {
     // ML Kit
     implementation(libs.mlkit.barcode.scanning)
 
+    // Networking & Serialization
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.coroutines.android)
 
     implementation(project(":data"))
     implementation(project(":domain"))
